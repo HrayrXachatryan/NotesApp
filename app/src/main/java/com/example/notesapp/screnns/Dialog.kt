@@ -19,7 +19,7 @@ fun Dialog (
     dialogState: MutableState<Boolean>,
     isEditing: Boolean = false,
     initialText: String = "",
-    onSubmit : (String) -> Unit
+    onSubmit: (String) -> Unit
 ){
     val dialogText = remember {mutableStateOf(initialText) }
     AlertDialog(
