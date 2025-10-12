@@ -16,6 +16,9 @@ import androidx.compose.ui.unit.dp
 import com.example.notesapp.viewModel.ScreenViewModel
 import androidx.compose.foundation.background
 import androidx.compose.foundation.shape.CircleShape
+//import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NoteAdd
+import androidx.compose.material.icons.filled.NoteAdd
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -25,14 +28,14 @@ import androidx.compose.ui.text.style.TextOverflow
 fun MainScreen(viewModel: ScreenViewModel) {
     Box(modifier = Modifier.fillMaxSize()) {
 
-        // --- Контент ---
+
         if (viewModel.texts.isEmpty()) {
             EmptyStateScreen()
         } else {
             NotesList(viewModel)
         }
 
-        // --- Кнопка “+” ---
+
         IconButton(
             onClick = {
                 viewModel.editIndex.value = null
@@ -53,7 +56,7 @@ fun MainScreen(viewModel: ScreenViewModel) {
             )
         }
 
-        // --- Диалог ---
+
         if (viewModel.dialogState.value) {
             Dialog(
                 dialogState = viewModel.dialogState,
@@ -84,7 +87,7 @@ fun EmptyStateScreen() {
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Icon(
-            imageVector = Icons.Default.Add,
+            imageVector = Icons.AutoMirrored.Filled.NoteAdd,
             contentDescription = null,
             tint = Color.Gray,
             modifier = Modifier.size(80.dp)
