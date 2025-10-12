@@ -1,4 +1,4 @@
-package com.example.notesapp.screnns
+package com.example.notesapp.screens
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
