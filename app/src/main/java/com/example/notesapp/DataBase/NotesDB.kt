@@ -7,7 +7,7 @@ import androidx.room.RoomDatabase
 import com.example.notesapp.dao.NotesDao
 import com.example.notesapp.entity.Notes  // здесь импортируем Entity
 
-@Database(entities = [Notes::class], version = 1)
+@Database(entities = [Notes::class], version = 1, exportSchema = false)
 abstract class NoteDatabase : RoomDatabase() {
     abstract fun noteDao(): NotesDao
 

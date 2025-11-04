@@ -3,76 +3,100 @@ package com.example.notesapp.screens
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
-import com.example.notesapp.viewModel.ScreenViewModel
-import androidx.compose.foundation.background
-import androidx.compose.foundation.shape.CircleShape
-//import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.NoteAdd
-import androidx.compose.material.icons.filled.NoteAdd
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import com.example.notesapp.viewModel.ScreenViewModel
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainScreen(viewModel: ScreenViewModel) {
-    Box(modifier = Modifier.fillMaxSize()) {
+    val isDarkTheme by viewModel.isDarkTheme
 
-
-        if (viewModel.texts.isEmpty()) {
-            EmptyStateScreen()
-        } else {
-            NotesList(viewModel)
-        }
-
-
-        IconButton(
-            onClick = {
-                viewModel.editIndex.value = null
-                viewModel.dialogState.value = true
-            },
-            modifier = Modifier
-                .align(Alignment.BottomEnd)
-                .padding(16.dp)
-                .size(42.dp)
-//                .shadow(5.dp, CircleShape)
-                .background(Color.Black.copy(alpha = 0.7f), CircleShape)
-        ) {
-            Icon(
-                imageVector = Icons.Default.Add,
-                contentDescription = "Add",
-                tint = Color.White,
-                modifier = Modifier.size(22.dp)
-            )
-        }
-
-
-        if (viewModel.dialogState.value) {
-            Dialog(
-                dialogState = viewModel.dialogState,
-                isEditing = viewModel.editIndex.value != null,
-                initialText = viewModel.editIndex.value?.let { viewModel.texts[it] } ?: "",
-                onSubmit = { newText ->
-                    val editIndex = viewModel.editIndex.value
-                    if (editIndex != null) {
-                        viewModel.updateItem(editIndex, newText)
-                        viewModel.editIndex.value = null
-                    } else {
-                        viewModel.addItem(newText)
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = {
+                    Text(
+                        text = "Notes",
+                        style = MaterialTheme.typography.titleLarge
+                    )
+                },
+                actions = {
+                    IconButton(onClick = { viewModel.toggleTheme() }) {
+                        Icon(
+                            imageVector = if (isDarkTheme) Icons.Filled.LightMode else Icons.Filled.DarkMode,
+                            contentDescription = if (isDarkTheme) {
+                                "Switch to light theme"
+                            } else {
+                                "Switch to dark theme"
+                            }
+                        )
                     }
-                    viewModel.dialogState.value = false
-                }
+                },
+                colors = TopAppBarDefaults.topAppBarColors(
+                    containerColor = MaterialTheme.colorScheme.surface,
+                    titleContentColor = MaterialTheme.colorScheme.onSurface,
+                    actionIconContentColor = MaterialTheme.colorScheme.onSurfaceVariant
+                )
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.editIndex.value = null
+                    viewModel.dialogState.value = true
+                },
+                containerColor = MaterialTheme.colorScheme.primary,
+                contentColor = MaterialTheme.colorScheme.onPrimary
+            ) {
+                Icon(
+                    imageVector = Icons.Default.Add,
+                    contentDescription = "Add note"
+                )
+            }
+        }
+    ) { innerPadding ->
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+        ) {
+            if (viewModel.texts.isEmpty()) {
+                EmptyStateScreen()
+            } else {
+                NotesList(viewModel)
+            }
+
+            if (viewModel.dialogState.value) {
+                Dialog(
+                    dialogState = viewModel.dialogState,
+                    isEditing = viewModel.editIndex.value != null,
+                    initialText = viewModel.editIndex.value?.let { viewModel.texts[it] } ?: "",
+                    onSubmit = { newText ->
+                        val editIndex = viewModel.editIndex.value
+                        if (editIndex != null) {
+                            viewModel.updateItem(editIndex, newText)
+                            viewModel.editIndex.value = null
+                        } else {
+                            viewModel.addItem(newText)
+                        }
+                        viewModel.dialogState.value = false
+                    }
+                )
+            }
         }
     }
 }
@@ -89,7 +113,7 @@ fun EmptyStateScreen() {
         Icon(
             imageVector = Icons.AutoMirrored.Filled.NoteAdd,
             contentDescription = null,
-            tint = Color.Gray,
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
             modifier = Modifier.size(80.dp)
         )
         Spacer(modifier = Modifier.height(16.dp))
@@ -97,14 +121,14 @@ fun EmptyStateScreen() {
             text = "You don’t have any notes yet",
             fontSize = 22.sp,
             fontWeight = FontWeight.Bold,
-            color = Color.DarkGray,
+            color = MaterialTheme.colorScheme.onSurface,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             text = "Tap the + icon in the bottom right corner to add one",
             fontSize = 16.sp,
-            color = Color.Gray,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Center
         )
     }
@@ -168,14 +192,14 @@ fun MainCard(
                         Icon(
                             imageVector = Icons.Filled.Edit,
                             contentDescription = "Edit",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.primary
                         )
                     }
                     IconButton(onClick = onDelete) {
                         Icon(
                             imageVector = Icons.Filled.Delete,
                             contentDescription = "Delete",
-                            tint = Color.Black
+                            tint = MaterialTheme.colorScheme.error
                         )
                     }
                 }

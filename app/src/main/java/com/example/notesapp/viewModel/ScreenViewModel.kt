@@ -2,6 +2,7 @@ package com.example.notesapp.viewModel
 
 import android.app.Application
 import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.snapshots.SnapshotStateList
@@ -29,8 +30,10 @@ class ScreenViewModel(application: Application) : AndroidViewModel(application) 
     private val _editIndex = mutableStateOf<Int?>(null)
     val editIndex: MutableState<Int?> = _editIndex
 
+    private val _isDarkTheme = mutableStateOf(false)
+    val isDarkTheme: State<Boolean> = _isDarkTheme
+
     init {
-        // Загружаем заметки из базы при старте
         viewModelScope.launch {
             val allNotes = withContext(Dispatchers.IO) { noteDao.getAll() }
             _texts.addAll(allNotes.map { it.text })
@@ -59,5 +62,13 @@ class ScreenViewModel(application: Application) : AndroidViewModel(application) 
             val noteToUpdate = noteDao.getAll().firstOrNull { it.text == oldText }
             noteToUpdate?.let { noteDao.update(it.copy(text = newText)) }
         }
+    }
+
+    fun toggleTheme() {
+        _isDarkTheme.value = !_isDarkTheme.value
+    }
+
+    fun setDarkTheme(enabled: Boolean) {
+        _isDarkTheme.value = enabled
     }
 }
