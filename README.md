@@ -23,7 +23,7 @@ A modern, Material 3 powered notes application built with Jetpack Compose. Quick
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/<username>/NotesApp.git
+   git clone https://github.com/HrayrXachatryan/NotesApp.git
    ```
 2. **Open in Android Studio** (Ladybug or newer recommended).
 3. **Sync Gradle** to fetch dependencies.
